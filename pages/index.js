@@ -8,14 +8,26 @@ import AddIcon from '@material-ui/icons/Add';
 import Switch from '@material-ui/core/Switch';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Paper from '@material-ui/core/Paper';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({}));
 
-}));
+function createData(name, date, service, features, complexity, platforms, users, total) {
+
+  return { name, date, service, features, complexity, platforms, users, total };
+}
 
 export default function Index() {
   const classes = useStyles();
   const theme = useTheme();
+  const [rows,setRows] = useState([createData("Julio", "10/9/20", "Website", "E-Commerce", "N/A", "N/A", "N/A", "$1500")]);
 
   const [websiteChecked, setWebsiteChecked] = useState(false);
   const [iOSChecked, setiOSChecked] = useState(false);
@@ -34,7 +46,7 @@ export default function Index() {
           InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <AddIcon />
+              <AddIcon color="primary" style={{fontSize: 30}}/>
             </InputAdornment>
           )
         }}/>
@@ -89,6 +101,45 @@ export default function Index() {
             labelPlacement="start"
           />
         </FormGroup>
+      </Grid>
+      <Grid item container justify="flex-end" style={{marginTop: '5em'}}>
+        <Grid item style={{marginRight: 75}}>
+          <FilterListIcon color="secondary" style={{fontSize: 50}}/>
+        </Grid>
+      </Grid>
+      <Grid item>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  Name
+                </TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Service</TableCell>
+                <TableCell>Features</TableCell>
+                <TableCell>Complexity</TableCell>
+                <TableCell>Platforms</TableCell>
+                <TableCell>Users</TableCell>
+                <TableCell>Total</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.service}</TableCell>
+                  <TableCell>{row.features}</TableCell>
+                  <TableCell>{row.complexity}</TableCell>
+                  <TableCell>{row.platforms}</TableCell>
+                  <TableCell>{row.users}</TableCell>
+                  <TableCell>{row.total}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
     </Grid>
   );
