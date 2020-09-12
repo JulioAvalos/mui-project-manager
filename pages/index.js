@@ -255,7 +255,8 @@ export default function Index() {
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item>
+              <Grid item> 
+              {/* Se pone dentro de un grid para poder alinearlos con el container */}
                 <Grid
                   item
                   container
