@@ -22,6 +22,8 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import DateFnsUtil from '@date-io/date-fns';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const useStyles = makeStyles(theme => ({
   service: {
@@ -73,6 +75,9 @@ export default function Index() {
     )
   ]);
 
+  const platformOptions = ["Web", "iOS", "Android"];
+  const featuresOptions = ["Photo/Video", "GPS", "File Transfer", "Users/Authentication", "Biometrics", "Push Notifications"];
+
   const [websiteChecked, setWebsiteChecked] = useState(false);
   const [iOSChecked, setiOSChecked] = useState(false);
   const [androidChecked, setAndroidChecked] = useState(false);
@@ -84,6 +89,8 @@ export default function Index() {
   const [service, setService] = useState("");
   const [complexity, setComplexity] = useState("");
   const [users, setUsers] = useState("");
+  const [platforms, setPlatforms] = useState([]);
+  const [features, setFeatures] = useState([]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtil}>
@@ -252,6 +259,24 @@ export default function Index() {
                         />
                       </RadioGroup>
                     </Grid>
+                    <Grid item style={{marginTop: '5em'}}>
+                      <Select 
+                        labelId="platforms" 
+                        id="platforms"
+                        multiple
+                        style={{width: '12em'}}
+                        displayEmpty
+                        renderValue={platforms.length > 0 ? undefined : () => "Platforms"}
+                        value={platforms}
+                        onChange={event => setPlatforms(event.target.value)}
+                      >
+                          {platformOptions.map(option => (
+                            <MenuItem key={option} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                      </Select>
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
@@ -338,6 +363,7 @@ export default function Index() {
                       item
                       container
                       direction="column"
+                      alignItems="flex-end"
                       style={{ marginTop: "5em" }}
                     >
                       <Grid item>
@@ -369,6 +395,29 @@ export default function Index() {
                             control={<Radio />}
                           />
                         </RadioGroup>
+                      </Grid>
+                      <Grid item style={{marginTop: '5em'}}>
+                        <Select 
+                          labelId="features" 
+                          style={{width: '12em'}}
+                          MenuProps={{
+                            style: {zIndex: 1302}
+                          }}
+                          id="features"
+                          multiple
+                          displayEmpty
+                          renderValue={
+                            features.length > 0 ? undefined : () => "Features"
+                          }
+                          value={features}
+                          onChange={event => setFeatures(event.target.value)}
+                        >
+                            {featuresOptions.map(option => (
+                              <MenuItem key={option} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                        </Select>
                       </Grid>
                     </Grid>
                   </Grid>
