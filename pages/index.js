@@ -86,7 +86,15 @@ export default function Index() {
   ]);
 
   const platformOptions = ["Web", "iOS", "Android"];
-  const featuresOptions = ["Photo/Video", "GPS", "File Transfer", "Users/Authentication", "Biometrics", "Push Notifications"];
+  let featuresOptions = [
+    "Photo/Video", 
+    "GPS", 
+    "File Transfer", 
+    "Users/Authentication", 
+    "Biometrics", 
+    "Push Notifications"
+  ];
+  let websiteOptions = ["Basic", "Interactive", "E-Commerce"];
 
   const [websiteChecked, setWebsiteChecked] = useState(false);
   const [iOSChecked, setiOSChecked] = useState(false);
@@ -110,10 +118,10 @@ export default function Index() {
         format(date, "MM/dd/yy"), 
         service, 
         features.join(", "), 
-        complexity, 
-        platforms.join(", "), 
-        users, 
-        total
+        service === "Website" ? "N/A" : complexity, 
+        service === "Website" ? "N/A" : platforms.join(", "), 
+        service === "Website" ? "N/A" : users, 
+        `$${total}`
       )
     ]);
     setDialogOpen(false);
@@ -272,7 +280,10 @@ export default function Index() {
                         aria-label="service"
                         name="service"
                         value={service}
-                        onChange={event => setService(event.target.value)}
+                        onChange={event => {
+                          setService(event.target.value);
+                          setFeatures([]);
+                        }}
                       >
                         <FormControlLabel
                           classes={{ label: classes.service }}
@@ -298,6 +309,7 @@ export default function Index() {
                       <Select
                         labelId="platforms"
                         id="platforms"
+                        disabled={service === "Website"}
                         multiple
                         style={{ width: '12em' }}
                         displayEmpty
@@ -350,18 +362,21 @@ export default function Index() {
                           onChange={event => setComplexity(event.target.value)}
                         >
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="Low"
                             label="Low"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="Medium"
                             label="Medium"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service }}
                             value="High"
                             label="High"
@@ -411,18 +426,21 @@ export default function Index() {
                           onChange={event => setUsers(event.target.value)}
                         >
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service, root: classes.users }}
                             value="0-10"
                             label="0-10"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service, root: classes.users }}
                             value="10-100"
                             label="10-100"
                             control={<Radio />}
                           />
                           <FormControlLabel
+                            disabled={service === "Website"}
                             classes={{ label: classes.service, root: classes.users }}
                             value="100+"
                             label="100+"
@@ -448,6 +466,7 @@ export default function Index() {
                       value={features}
                       onChange={event => setFeatures(event.target.value)}
                     >
+                      {service === "Website" ? featuresOptions = websiteOptions : null}
                       {featuresOptions.map(option => (
                         <MenuItem key={option} value={option}>
                           {option}
@@ -477,7 +496,8 @@ export default function Index() {
                     service === "Website" 
                       ? name.length === 0 || 
                         total.length === 0 || 
-                        features.length === 0 
+                        features.length === 0 || 
+                        features.length > 1
                       : name.length === 0 || 
                         total.length === 0 || 
                         features.length === 0 || 
