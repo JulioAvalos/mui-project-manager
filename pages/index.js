@@ -24,18 +24,28 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import { format } from 'date-fns';
 
 const useStyles = makeStyles(theme => ({
   service: {
     fontWeight: 300
   },
-  users:{
+  users: {
     marginRight: 0
+  },
+  button: {
+    color: '#fff',
+    backgroundColor: theme.palette.common.orange,
+    borderRadius: 50,
+    textTransform: 'none',
+    "&:hover": {
+      backgroundColor: theme.palette.secondary.light
+    }
   }
 }));
 
 function createData(name, date, service, features, complexity, platforms, users, total) {
-
   return { name, date, service, features, complexity, platforms, users, total };
 }
 
@@ -91,6 +101,31 @@ export default function Index() {
   const [users, setUsers] = useState("");
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+
+  const addProject = () => {
+    setRows([
+      ...rows, 
+      createData(
+        name, 
+        format(date, "MM/dd/yy"), 
+        service, 
+        features.join(", "), 
+        complexity, 
+        platforms.join(", "), 
+        users, 
+        total
+      )
+    ]);
+    setDialogOpen(false);
+    setName("");
+    setDate(new Date());
+    setTotal("");
+    setService("");
+    setComplexity("");
+    setUsers("");
+    setPlatforms([]);
+    setFeatures([]);
+  };
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtil}>
@@ -259,29 +294,29 @@ export default function Index() {
                         />
                       </RadioGroup>
                     </Grid>
-                    <Grid item style={{marginTop: '5em'}}>
-                      <Select 
-                        labelId="platforms" 
+                    <Grid item style={{ marginTop: '5em' }}>
+                      <Select
+                        labelId="platforms"
                         id="platforms"
                         multiple
-                        style={{width: '12em'}}
+                        style={{ width: '12em' }}
                         displayEmpty
                         renderValue={platforms.length > 0 ? undefined : () => "Platforms"}
                         value={platforms}
                         onChange={event => setPlatforms(event.target.value)}
                       >
-                          {platformOptions.map(option => (
-                            <MenuItem key={option} value={option}>
-                              {option}
-                            </MenuItem>
-                          ))}
+                        {platformOptions.map(option => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item> 
-              {/* Se pone dentro de un grid para poder alinearlos con el container */}
+              <Grid item>
+                {/* Se pone dentro de un grid para poder alinearlos con el container */}
                 <Grid
                   item
                   container
@@ -340,10 +375,10 @@ export default function Index() {
                 </Grid>
               </Grid>
               <Grid item>
-                <Grid 
-                  item 
-                  container 
-                  direction="column" 
+                <Grid
+                  item
+                  container
+                  direction="column"
                   sm
                   alignItems="flex-end"
                 >
@@ -358,12 +393,11 @@ export default function Index() {
                       onChange={event => setTotal(event.target.value)}
                     />
                   </Grid>
-                  <Grid item>
+                  <Grid item style={{ alignSelf: 'flex-end' }}>
                     <Grid
                       item
                       container
                       direction="column"
-                      alignItems="flex-end"
                       style={{ marginTop: "5em" }}
                     >
                       <Grid item>
@@ -396,32 +430,65 @@ export default function Index() {
                           />
                         </RadioGroup>
                       </Grid>
-                      <Grid item style={{marginTop: '5em'}}>
-                        <Select 
-                          labelId="features" 
-                          style={{width: '12em'}}
-                          MenuProps={{
-                            style: {zIndex: 1302}
-                          }}
-                          id="features"
-                          multiple
-                          displayEmpty
-                          renderValue={
-                            features.length > 0 ? undefined : () => "Features"
-                          }
-                          value={features}
-                          onChange={event => setFeatures(event.target.value)}
-                        >
-                            {featuresOptions.map(option => (
-                              <MenuItem key={option} value={option}>
-                                {option}
-                              </MenuItem>
-                            ))}
-                        </Select>
-                      </Grid>
                     </Grid>
                   </Grid>
+                  <Grid item style={{ marginTop: '5em' }}>
+                    <Select
+                      labelId="features"
+                      style={{ width: '12em' }}
+                      MenuProps={{
+                        style: { zIndex: 1302 }
+                      }}
+                      id="features"
+                      multiple
+                      displayEmpty
+                      renderValue={
+                        features.length > 0 ? undefined : () => "Features"
+                      }
+                      value={features}
+                      onChange={event => setFeatures(event.target.value)}
+                    >
+                      {featuresOptions.map(option => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
                 </Grid>
+              </Grid>
+            </Grid>
+            <Grid container justify="center" style={{ marginTop: '3em' }}>
+              <Grid item>
+                <Button
+                  onClick={() => setDialogOpen(false)}
+                  color="primary"
+                  style={{ fontWeight: 300 }}
+                >
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid>
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={addProject}
+                  disabled={
+                    service === "Website" 
+                      ? name.length === 0 || 
+                        total.length === 0 || 
+                        features.length === 0 
+                      : name.length === 0 || 
+                        total.length === 0 || 
+                        features.length === 0 || 
+                        users.length === 0 || 
+                        complexity.length === 0 || 
+                        platforms.length === 0 || 
+                        service.length === 0
+                  }
+                >
+                  Add Project +
+                </Button>
               </Grid>
             </Grid>
           </DialogContent>
