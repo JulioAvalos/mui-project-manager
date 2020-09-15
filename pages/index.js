@@ -233,12 +233,7 @@ export default function Index() {
             />
           </FormGroup>
         </Grid>
-        <Grid item container justify="flex-end" style={{ marginTop: '5em' }}>
-          <Grid item style={{ marginRight: 75 }}>
-            <FilterListIcon color="secondary" style={{ fontSize: 50 }} />
-          </Grid>
-        </Grid>
-        <Grid item style={{ marginBottom: '15em' }}>
+        <Grid item style={{ marginTop: '5em', marginBottom: '15em' }}>
           <EnhancedTable rows={rows} />
         </Grid>
         <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
