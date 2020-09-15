@@ -45,8 +45,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function createData(name, date, service, features, complexity, platforms, users, total) {
-  return { name, date, service, features, complexity, platforms, users, total };
+function createData(name, date, service, features, complexity, platforms, users, total, search) {
+  return { name, date, service, features, complexity, platforms, users, total, search };
 }
 
 export default function Index() {
@@ -61,7 +61,8 @@ export default function Index() {
       "N/A",
       "N/A",
       "N/A",
-      "$1500"
+      "$1500",
+      true
     ),
     createData(
       "Bill Gates",
@@ -71,7 +72,8 @@ export default function Index() {
       "Medium",
       "Web Application",
       "0-10",
-      "$6500"
+      "$6500",
+      true
     ),
     createData(
       "Steve Jobs",
@@ -81,7 +83,8 @@ export default function Index() {
       "Low",
       "Web Application",
       "10-100",
-      "$1250"
+      "$1250",
+      true
     )
   ]);
 
@@ -109,6 +112,7 @@ export default function Index() {
   const [users, setUsers] = useState("");
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [search, setSearch] = useState("");
 
   const addProject = () => {
     setRows([
@@ -121,7 +125,8 @@ export default function Index() {
         service === "Website" ? "N/A" : complexity, 
         service === "Website" ? "N/A" : platforms.join(", "), 
         service === "Website" ? "N/A" : users, 
-        `$${total}`
+        `$${total}`,
+        true
       )
     ]);
     setDialogOpen(false);
@@ -135,6 +140,23 @@ export default function Index() {
     setFeatures([]);
   };
 
+  const handleSearch = event => {
+    setSearch(event.target.value);
+
+    const rowData = rows.map(row => 
+      Object.values(row).filter(option => option !== true && option !== false)
+    );
+
+    const matches = rowData.map(row => row.map(option => option.toLowerCase().includes(event.target.value.toLowerCase())));
+
+    const newRows = [...rows]
+
+    matches.map((row, index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false);
+
+    setRows(newRows);
+
+  }
+
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtil}>
       <Grid container direction="column">
@@ -144,6 +166,8 @@ export default function Index() {
         <Grid>
           <TextField
             placeholder="Search project details or create a new entry"
+            value={search}
+            onChange={handleSearch}
             style={{ width: '35em', marginLeft: '5em' }}
             InputProps={{
               endAdornment: (
@@ -229,7 +253,9 @@ export default function Index() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row, index) => (
+                {rows
+                  .filter(row => row.search)
+                  .map((row, index) => (
                   <TableRow key={index}>
                     <TableCell align="center">{row.name}</TableCell>
                     <TableCell align="center">{row.date}</TableCell>
