@@ -26,6 +26,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { format } from 'date-fns';
+import EnhancedTable from '../src/UI/EnhancedTable';
 
 const useStyles = makeStyles(theme => ({
   service: {
@@ -238,38 +239,7 @@ export default function Index() {
           </Grid>
         </Grid>
         <Grid item style={{ marginBottom: '15em' }}>
-          <TableContainer component={Paper} elevation={0}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Date</TableCell>
-                  <TableCell align="center">Service</TableCell>
-                  <TableCell align="center">Features</TableCell>
-                  <TableCell align="center">Complexity</TableCell>
-                  <TableCell align="center">Platforms</TableCell>
-                  <TableCell align="center">Users</TableCell>
-                  <TableCell align="center">Total</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows
-                  .filter(row => row.search)
-                  .map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.date}</TableCell>
-                    <TableCell align="center">{row.service}</TableCell>
-                    <TableCell align="center" style={{ maxWidth: '5em' }}>{row.features}</TableCell>
-                    <TableCell align="center">{row.complexity}</TableCell>
-                    <TableCell align="center">{row.platforms}</TableCell>
-                    <TableCell align="center">{row.users}</TableCell>
-                    <TableCell align="center">{row.total}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <EnhancedTable rows={rows} />
         </Grid>
         <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <Grid container justify="center">
