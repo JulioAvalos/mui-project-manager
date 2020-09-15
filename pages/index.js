@@ -90,10 +90,10 @@ export default function Index() {
     createData(
       "Stan Smith",
       "2/13/20",
-      "Custom Software",
+      "Mobile App",
       "Photo/Video, File Transfer, Users/Authentication",
       "Low",
-      "Web Application",
+      "iOS, Android",
       "10-100",
       "$1250",
       true
@@ -101,10 +101,10 @@ export default function Index() {
     createData(
       "Maria Ximena",
       "2/13/20",
-      "Custom Software",
+      "Mobile App",
       "Photo/Video, File Transfer, Users/Authentication",
       "Low",
-      "Web Application",
+      "Android",
       "10-100",
       "$1250",
       true
@@ -211,7 +211,8 @@ export default function Index() {
               style={{ marginRight: '5em' }}
               control={
                 <Switch
-                  check={websiteChecked}
+                  // transforms boolean to string, because DOM expects a string.
+                  check={websiteChecked.toString()} 
                   color="primary"
                   onChange={() => setWebsiteChecked(!websiteChecked)}
                 />
@@ -223,7 +224,7 @@ export default function Index() {
               style={{ marginRight: '5em' }}
               control={
                 <Switch
-                  check={iOSChecked}
+                  check={iOSChecked.toString()}
                   color="primary"
                   onChange={() => setiOSChecked(!iOSChecked)}
                 />
@@ -235,7 +236,7 @@ export default function Index() {
               style={{ marginRight: '5em' }}
               control={
                 <Switch
-                  check={androidChecked}
+                  check={androidChecked.toString()}
                   color="primary"
                   onChange={() => setAndroidChecked(!androidChecked)}
                 />
@@ -246,7 +247,7 @@ export default function Index() {
             <FormControlLabel
               control={
                 <Switch
-                  check={softwareChecked}
+                  check={softwareChecked.toString()}
                   color="primary"
                   onChange={() => setSoftwareChecked(!softwareChecked)}
                 />
@@ -257,7 +258,16 @@ export default function Index() {
           </FormGroup>
         </Grid>
         <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
-          <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage}/>
+          <EnhancedTable 
+            rows={rows} 
+            setRows={setRows} 
+            page={page} 
+            setPage={setPage}
+            websiteChecked={websiteChecked}
+            iOSChecked={iOSChecked}
+            androidChecked={androidChecked}
+            softwareChecked={softwareChecked}
+          />
         </Grid>
         <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <Grid container justify="center">
