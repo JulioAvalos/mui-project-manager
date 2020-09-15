@@ -86,6 +86,28 @@ export default function Index() {
       "10-100",
       "$1250",
       true
+    ),
+    createData(
+      "Stan Smith",
+      "2/13/20",
+      "Custom Software",
+      "Photo/Video, File Transfer, Users/Authentication",
+      "Low",
+      "Web Application",
+      "10-100",
+      "$1250",
+      true
+    ),
+    createData(
+      "Maria Ximena",
+      "2/13/20",
+      "Custom Software",
+      "Photo/Video, File Transfer, Users/Authentication",
+      "Low",
+      "Web Application",
+      "10-100",
+      "$1250",
+      true
     )
   ]);
 
@@ -114,6 +136,7 @@ export default function Index() {
   const [platforms, setPlatforms] = useState([]);
   const [features, setFeatures] = useState([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
 
   const addProject = () => {
     setRows([
@@ -155,7 +178,7 @@ export default function Index() {
     matches.map((row, index) => row.includes(true) ? newRows[index].search = true : newRows[index].search = false);
 
     setRows(newRows);
-
+    setPage(0);
   }
 
   return (
@@ -233,8 +256,8 @@ export default function Index() {
             />
           </FormGroup>
         </Grid>
-        <Grid item style={{ marginTop: '5em', marginBottom: '15em' }}>
-          <EnhancedTable rows={rows} />
+        <Grid item style={{ marginTop: '5em', marginBottom: '35em' }}>
+          <EnhancedTable rows={rows} page={page} setPage={setPage}/>
         </Grid>
         <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
           <Grid container justify="center">
