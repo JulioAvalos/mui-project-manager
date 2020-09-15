@@ -135,6 +135,16 @@ const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
 
+    const onDelete = () => {
+        const newRows = [...props.rows];
+        const selectedRows = newRows.filter(
+            row => props.selected.includes(row.name)
+        );
+
+        selectedRows.map(row => row.search = false)
+        props.setRows(newRows);
+    }
+
     return (
         <Toolbar
             className={clsx(classes.root, {
@@ -149,7 +159,7 @@ const EnhancedTableToolbar = (props) => {
 
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
+                    <IconButton aria-label="delete" onClick={onDelete}>
                         <DeleteIcon color="primary" style={{ fontSize: 30 }} />
                     </IconButton>
                 </Tooltip>
@@ -249,7 +259,13 @@ export default function EnhancedTable(props) {
     return (
         <div className={classes.root}>
             <Paper className={classes.paper} elevation={0}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar 
+                    rows={props.rows}
+                    setRows={props.setRows}
+                    selected={selected} 
+                    setSelected={setSelected} 
+                    numSelected={selected.length} 
+                />
                 <TableContainer>
                     <Table
                         className={classes.table}
