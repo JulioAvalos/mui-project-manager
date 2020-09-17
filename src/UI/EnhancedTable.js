@@ -22,6 +22,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -130,14 +134,39 @@ const useToolbarStyles = makeStyles((theme) => ({
             },
     title: {
         flex: '1 1 100%',
-    },
+    }, 
+    menu: {
+        "&:hover": {
+            backgroundColor: "#fff"
+        },
+        "&.Mui-focusVisible": {
+            backgroundColor: "#fff"
+        }
+    }
 }));
 
 const EnhancedTableToolbar = (props) => {
     const classes = useToolbarStyles();
     const { numSelected } = props;
     const [undo, setUndo] = React.useState([]);
-    const [alert, setAlert] = React.useState({open: false, backgroundColor: '#FF3232', message: 'Row Deleted!'});
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [openMenu, setOpenMenu] = React.useState(false);
+    const [totalFilter, setTotalFilter] = React.useState(">");
+    const [alert, setAlert] = React.useState({
+        open: false, 
+        backgroundColor: '#FF3232', 
+        message: 'Row Deleted!'
+    });
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+        setOpenMenu(true);
+    };
+
+    const handleClose = (event) => {
+        setAnchorEl(null);
+        setOpenMenu(false);
+    };
 
     const onDelete = () => {
         const newRows = [...props.rows];
@@ -180,12 +209,12 @@ const EnhancedTableToolbar = (props) => {
                     </IconButton>
                 </Tooltip>
             ) : (
-                    <Tooltip title="Filter list">
-                        <IconButton aria-label="filter list">
-                            <FilterListIcon color="secondary" style={{ fontSize: 50 }} />
-                        </IconButton>
-                    </Tooltip>
-                )}
+                <Tooltip title="Filter list">
+                    <IconButton aria-label="filter list" onClick={handleClick}>
+                        <FilterListIcon color="secondary" style={{ fontSize: 50 }} />
+                    </IconButton>
+                </Tooltip>
+            )}
             <Snackbar 
                 open={alert.open} 
                 ContentProps={{
@@ -209,6 +238,35 @@ const EnhancedTableToolbar = (props) => {
                     </Button>
                 }
             />
+            <Menu 
+                id="simple-menu" 
+                anchorEl={anchorEl} 
+                open={openMenu} 
+                onClose={handleClose}
+                elevation={0}
+                style={{zIndex: 1302}}
+                keepMounted
+            >
+                <MenuItem classes={{root: classes.menu}}>
+                    <TextField InputProps={{
+                        type: "number",
+                        endAdornment: 
+                        <InputAdornment onClick={() => 
+                            setTotalFilter(
+                                totalFilter === ">" 
+                                ? "<" 
+                                : totalFilter === "<" 
+                                ? "=" 
+                                : ">"
+                                )
+                            }
+                            position="end" style={{pointer: "click"}}>
+                        <span className={classes.totalFilter}>
+                            {totalFilter}
+                        </span>
+                    </InputAdornment>}}/>
+                </MenuItem>
+            </Menu>
         </Toolbar>
     );
 };
