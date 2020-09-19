@@ -142,6 +142,14 @@ const useToolbarStyles = makeStyles((theme) => ({
         "&.Mui-focusVisible": {
             backgroundColor: "#fff"
         }
+    },
+    totalFilter: {
+        fontSize: "2rem",
+        color: theme.palette.common.orange,
+    },
+    dollarSign: {
+        fontSize: '1.5rem',
+        color: theme.palette.common.orange
     }
 }));
 
@@ -152,6 +160,7 @@ const EnhancedTableToolbar = (props) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openMenu, setOpenMenu] = React.useState(false);
     const [totalFilter, setTotalFilter] = React.useState(">");
+    const [filterPrice, setFilterPrice] = React.useState("");
     const [alert, setAlert] = React.useState({
         open: false, 
         backgroundColor: '#FF3232', 
@@ -189,6 +198,34 @@ const EnhancedTableToolbar = (props) => {
         Array.prototype.push.apply(newRows, ...redo); // overriding values from newRows using redo.
         props.setRows(newRows);
     };
+
+    const handleTotalFilter = (event) => {
+        setFilterPrice(event.target.value);
+
+        if(event.target.value !== "") {
+            const newRows = [...props.rows];
+            newRows.map(row => eval(
+                `${event.target.value} ${totalFilter === "=" ? "===" : totalFilter } ${row.total.slice(1, row.total.length)}`
+                ) ? row.search = true : row.search = false
+            ); 
+            props.setRows(newRows);
+        } else {
+            const newRows = [...props.rows];
+            newRows.map(row => row.search = true);
+            props.setRows(newRows);
+        }
+    };
+
+    const filterChange = (operator) => {
+        if(filterPrice !== "") {
+            const newRows = [...props.rows];
+            newRows.map(row => eval(
+                `${filterPrice} ${operator === "=" ? "===" : operator } ${row.total.slice(1, row.total.length)}`
+                ) ? row.search = true : row.search = false
+            ); 
+            props.setRows(newRows);
+        }
+    }
 
     return (
         <Toolbar
@@ -248,23 +285,41 @@ const EnhancedTableToolbar = (props) => {
                 keepMounted
             >
                 <MenuItem classes={{root: classes.menu}}>
-                    <TextField InputProps={{
-                        type: "number",
-                        endAdornment: 
-                        <InputAdornment onClick={() => 
-                            setTotalFilter(
-                                totalFilter === ">" 
-                                ? "<" 
-                                : totalFilter === "<" 
-                                ? "=" 
-                                : ">"
-                                )
-                            }
-                            position="end" style={{pointer: "click"}}>
-                        <span className={classes.totalFilter}>
-                            {totalFilter}
-                        </span>
-                    </InputAdornment>}}/>
+                    <TextField 
+                        value={filterPrice}
+                        onChange={handleTotalFilter}
+                        placeholder="Enter a price to filter"
+                        InputProps={{
+                            type: "number",
+                            startAdornment: 
+                            <InputAdornment position="start">
+                                <span className={classes.dollarSign}>$</span>
+                            </InputAdornment>,
+                            endAdornment: 
+                            <InputAdornment 
+                                onClick={() => {
+                                    setTotalFilter(
+                                        totalFilter === ">" 
+                                        ? "<" 
+                                        : totalFilter === "<" 
+                                        ? "=" 
+                                        : ">"
+                                    );
+                                    filterChange(
+                                        totalFilter === ">" 
+                                        ? "<" 
+                                        : totalFilter === "<" 
+                                        ? "=" 
+                                        : ">"
+                                    );
+                                }}
+                                position="end" 
+                                style={{cursor: "pointer"}}>
+                                <span className={classes.totalFilter}>
+                                    {totalFilter}
+                                </span>
+                            </InputAdornment>
+                        }}/>
                 </MenuItem>
             </Menu>
         </Toolbar>
